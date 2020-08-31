@@ -29,6 +29,26 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+def traversal(current_room, visited=set()):
+    move = []   
+    opposite_directions = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
+
+    for valid_exit in player.current_room.get_exits():
+        player.travel(valid_exit)
+        # print(player.current_room.id, valid_exit)
+       
+        if player.current_room.id not in visited:
+            visited.add(player.current_room.id)
+            move.append(valid_exit)
+            move += traversal(player.current_room, visited)
+            player.travel(opposite_directions[valid_exit])
+            move.append(opposite_directions[valid_exit])  
+        else:
+            player.travel(opposite_directions[valid_exit])
+    print(f' {player.current_room} moves: {len(move)}')
+    return move
+
+traversal_path = traversal(player.current_room)
 
 
 # TRAVERSAL TEST - DO NOT MODIFY
